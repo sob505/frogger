@@ -5,11 +5,11 @@ import java.util.Random;
 
 public class Background {
     private final Rectangle[] background;
-    private final Rectangle[][] backgroundPieces;
+    private final BackgroundPiece[][] backgroundPieces;
     private final double[] speed;
     public Background(Pane pane) {
         this.background = new Rectangle[13];
-        this.backgroundPieces = new Rectangle[this.background.length][4];
+        this.backgroundPieces = new BackgroundPiece[this.background.length][4];
         this.speed = new double[this.background.length];
 
         // Create the background stripes
@@ -37,26 +37,28 @@ public class Background {
     private void setupPieces(int index, Pane pane) {
         if(index == 0 || index == 6 || index == this.background.length - 1) { return; }
         for(int i = 0; i < this.backgroundPieces[i].length; i++) {
-            this.backgroundPieces[index][i] = new Rectangle();
-            this.backgroundPieces[index][i].setFill(Paint.valueOf("White"));
+            this.backgroundPieces[index][i] = new BackgroundPieceFactory().createPiece(index);
+            //this.backgroundPieces[index][i] = new Rectangle();
+            //this.backgroundPieces[index][i].setFill(Paint.valueOf("White"));
 
             // Keep a standard height of 40 and standard width depending on which row it is in
-            this.backgroundPieces[index][i].setHeight(40);
-            if(index < 6) {
-                this.backgroundPieces[index][i].setWidth(Math.random() * 100 + 50);
-            } else {
-                this.backgroundPieces[index][i].setWidth(50);
-            }
+            //this.backgroundPieces[index][i].setHeight(40);
+//            if(index < 6) {
+//               // this.backgroundPieces[index][i] = new Log();
+//                //this.backgroundPieces[index][i].setWidth(Math.random() * 100 + 50);
+//            } else {
+//                this.backgroundPieces[index][i].setWidth(50);
+//            }
 
             // Randomize the x-coordinate of the backgroundPiece
             this.backgroundPieces[index][i].setX(Math.random() * 500 + 50);
-            // If the backgroundPiece is too close to the one before it, move it over
-            if(i > 0 && Math.abs(this.backgroundPieces[index][i-1].getX() + this.backgroundPieces[index][i-1].getWidth() - this.backgroundPieces[index][i].getX()) < 50) {
-                this.backgroundPieces[index][i].setX(this.backgroundPieces[index][i].getX() + 100);
-            }
+//            // If the backgroundPiece is too close to the one before it, move it over
+//            if(i > 0 && Math.abs(this.backgroundPieces[index][i-1].getX() + this.backgroundPieces[index][i-1].getWidth() - this.backgroundPieces[index][i].getX()) < 50) {
+//                this.backgroundPieces[index][i].setX(this.backgroundPieces[index][i].getX() + 100);
+//            }
             // Set the backgroundPiece in the corresponding stripe
             this.backgroundPieces[index][i].setY(this.background[index].getY()+5);
-            pane.getChildren().add(this.backgroundPieces[index][i]);
+            pane.getChildren().add(this.backgroundPieces[index][i].getShape());
         }
     }
     // Move the background pieces
