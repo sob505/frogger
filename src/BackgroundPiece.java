@@ -7,7 +7,7 @@ import java.util.Random;
 
 public abstract class BackgroundPiece {
     private final int row;
-    private final double speed;
+    private double speed;
     private final Rectangle shape;
     private final String type;
 
@@ -33,4 +33,5 @@ public abstract class BackgroundPiece {
     public double getWidth() { return this.shape.getWidth(); }
     public String getType() { return this.type; }
     public double getSpeed() { return this.speed; }
+    public void setSpeed() { this.speed = speed; }
 }

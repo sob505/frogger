@@ -55,7 +55,7 @@ public class Game {
                         lose();
                         break;
                     } else {
-
+                        moveFrogWithLog(pieces[i][j]);
                         break;
                     }
                 }
@@ -85,5 +85,14 @@ public class Game {
             Game frogger = new Game(this.pane, this.scene);
             frogger.play();
         });
+    }
+    private void moveFrogWithLog(BackgroundPiece piece) {
+        this.player.getFrog().setCenterX(this.player.getFrog().getCenterX() + piece.getSpeed());
+
+//        piece.getShape().xProperty().addListener((observable, oldValue, newValue) -> {
+//            // Update the other variable to match the x-value of the rectangle
+//            double movement = oldValue.doubleValue() - newValue.doubleValue();
+//            this.player.getFrog().setCenterX(this.player.getFrog().getCenterX() + movement);
+//        });
     }
 }
