@@ -2,7 +2,7 @@ import javafx.scene.image.Image;
 
 public class FloatFactory implements LocationFactory {
     @Override // Only logs move to the right in the river
-    public RightMover makeRightMover(int row, int index) {
+    public RightMover makeRightMover(int row, int index, double rowSpeed) {
         int width = 0;
         int spacing = 0;
         Image img = new Image("/image/log.png");
@@ -24,11 +24,11 @@ public class FloatFactory implements LocationFactory {
                 img = new Image("/image/log2.png");
                 break;
         }
-        return new RightMover(row, width, img, spacing);
+        return new RightMover(row, width, img, spacing, "Float", rowSpeed);
     }
 
     @Override // Turtles move to the left in the river
-    public LeftMover makeLeftMover(int row, int index) {
+    public LeftMover makeLeftMover(int row, int index, double rowSpeed) {
         Image img = new Image("/image/turtle.png");;
         int width = 0;
         int spacing = 40;
@@ -42,6 +42,6 @@ public class FloatFactory implements LocationFactory {
                 width = 120;
                 break;
         }
-        return new LeftMover(row, width, img, (spacing + width) * index);
+        return new LeftMover(row, width, img, (spacing + width) * index, "Float", rowSpeed);
     }
 }

@@ -6,12 +6,13 @@ import java.util.Random;
 public class Background {
     private final Rectangle[] background;
     private BackgroundPiece[][] backgroundPieces;
+    private final Random rand = new Random();
     private final int[] pieces = new int[]{0, 4, 4, 3, 3, 5, 0, 2, 3, 3, 3, 3, 0};
-    private final double[] speed;
+    //private final double[] speed;
     public Background(Pane pane) {
         this.background = new Rectangle[13];
         this.backgroundPieces = new BackgroundPiece[this.background.length][5];
-        this.speed = new double[this.background.length];
+       // this.speed = new double[this.background.length];
 
         // Create the background stripes
         for(int i = 0; i < this.background.length; i++) {
@@ -22,12 +23,12 @@ public class Background {
             else if(i > 6 && i <= 11) { this.background[i].setFill(Paint.valueOf("Black")); }
             else { this.background[i].setFill(Paint.valueOf("Green")); }
 
-            Random rand = new Random();
-            if(i % 2 == 0) {
-                this.speed[i] = rand.nextInt(4) + 2;
-            } else {
-                this.speed[i] = -1 * (rand.nextInt(4) + 2);
-            }
+//            Random rand = new Random();
+//            if(i % 2 == 0) {
+//                this.speed[i] = rand.nextInt(4) + 2;
+//            } else {
+//                this.speed[i] = -1 * (rand.nextInt(4) + 2);
+//            }
 
             pane.getChildren().add(this.background[i]);
             setupPieces(i,pane);
@@ -36,9 +37,10 @@ public class Background {
 
     // Create the background pieces and initialize their speed
     private void setupPieces(int index, Pane pane) {
+        double rowSpeed = rand.nextInt(4) + 2;
 //        if(index == 0 || index == 6 || index == this.background.length - 1) { return; }
         for(int i = 0; i < this.pieces[index]; i++) {
-            this.backgroundPieces[index][i] = new BackgroundPieceFactory().createPiece(index, i);
+            this.backgroundPieces[index][i] = new BackgroundPieceFactory().createPiece(index, i, rowSpeed);
             //this.backgroundPieces[index][i] = new Rectangle();
             //this.backgroundPieces[index][i].setFill(Paint.valueOf("White"));
 
@@ -68,14 +70,17 @@ public class Background {
             for(int j = 0; j < this.backgroundPieces[i].length; j++) {
                 // If no piece exists, skip the index set
                 if(this.backgroundPieces[i][j] == null) { break; }
-                // Once the piece has reached the far side of the board, reset it at the opposite end
-                if(this.speed[i] < 0 && this.backgroundPieces[i][j].getX() + this.backgroundPieces[i][j].getWidth() < -10) {
-                   this.backgroundPieces[i][j].setX(750);
-                } else if (this.speed[i] > 0 && this.backgroundPieces[i][j].getX() > 825) {
-                    this.backgroundPieces[i][j].setX(0);
-                } else { // Otherwise keep moving it at the row's speed
-                    this.backgroundPieces[i][j].setX(this.backgroundPieces[i][j].getX() + this.speed[i]);
+                else {
+                    this.backgroundPieces[i][j].move();
                 }
+//                // Once the piece has reached the far side of the board, reset it at the opposite end
+//                if(this.speed[i] < 0 && this.backgroundPieces[i][j].getX() + this.backgroundPieces[i][j].getWidth() < -10) {
+//                   this.backgroundPieces[i][j].setX(750);
+//                } else if (this.speed[i] > 0 && this.backgroundPieces[i][j].getX() > 825) {
+//                    this.backgroundPieces[i][j].setX(0);
+//                } else { // Otherwise keep moving it at the row's speed
+//                    this.backgroundPieces[i][j].setX(this.backgroundPieces[i][j].getX() + this.speed[i]);
+//                }
             }
         }
     }

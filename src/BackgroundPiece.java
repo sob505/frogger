@@ -3,19 +3,23 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+import java.util.Random;
+
 public abstract class BackgroundPiece {
     private final int row;
-    private final int direction;
+    private final double speed;
     private final Rectangle shape;
+    private final String type;
 
-    public BackgroundPiece(int row, int direction, int width, Image img) {
+    public BackgroundPiece(int row, double speed, int width, Image img, String type) {
         this.row = row;
-        this.direction = direction;
+        this.speed = speed;
         this.shape = new Rectangle();
         this.shape.setHeight(40);
         this.shape.setWidth(width);
         this.shape.setFill(Paint.valueOf("White"));
         this.shape.setFill(new ImagePattern(img));
+        this.type = type;
     }
 
     public abstract void move();
@@ -27,5 +31,6 @@ public abstract class BackgroundPiece {
     public void setY(double y) { this.shape.setY(y); }
 
     public double getWidth() { return this.shape.getWidth(); }
-    public void setRotate(double rotate) { this.shape.setRotate(rotate); }
+    public String getType() { return this.type; }
+    public double getSpeed() { return this.speed; }
 }

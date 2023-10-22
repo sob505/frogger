@@ -2,15 +2,20 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 
+import java.util.Random;
+
 public class RightMover extends BackgroundPiece {
-    private static final int direction = 1;
-    public RightMover(int row, int width, Image img, int spacing) {
-        super(row, direction, width, img);
+    public RightMover(int row, int width, Image img, int spacing, String type, double rowSpeed) {
+        super(row, rowSpeed, width, img, type);
         super.setX(spacing);
     }
 
     @Override
     public void move() {
-
+        if(super.getX() > 825) {
+            super.setX(0);
+        } else {
+            super.setX(super.getX() + super.getSpeed());
+        }
     }
 }

@@ -51,8 +51,13 @@ public class Game {
         for (int i = 0; i < pieces.length; i++) {
             for(int j = 0; j < pieces[i].length; j++) {
                 if (pieces[i][j] != null && this.player.getFrog().intersects(pieces[i][j].getShape().getBoundsInLocal())) {
-                    lose();
-                    break;
+                    if (pieces[i][j].getType().equals("Vehicle")) {
+                        lose();
+                        break;
+                    } else {
+
+                        break;
+                    }
                 }
             }
         }
