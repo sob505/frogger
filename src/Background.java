@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class Background {
     private final Rectangle[] background;
-    private final BackgroundPiece[][] backgroundPieces;
+    private BackgroundPiece[][] backgroundPieces;
     private final int[] pieces = new int[]{0, 4, 4, 3, 3, 5, 0, 2, 3, 3, 3, 3, 0};
     private final double[] speed;
     public Background(Pane pane) {
@@ -15,8 +15,8 @@ public class Background {
 
         // Create the background stripes
         for(int i = 0; i < this.background.length; i++) {
-            this.background[i] = new Rectangle(700,50);
-            this.background[i].setX(50);
+            this.background[i] = new Rectangle(800,50);
+            this.background[i].setX(0);
             this.background[i].setY(i*50 + 25);
             if(i > 0 && i <= 5) { this.background[i].setFill(Paint.valueOf("Blue")); }
             else if(i > 6 && i <= 11) { this.background[i].setFill(Paint.valueOf("Black")); }
@@ -80,4 +80,5 @@ public class Background {
         }
     }
     public Rectangle[] getBackground() { return this.background; }
+    public BackgroundPiece[][] getBackgroundPieces() { return this.backgroundPieces; }
 }
