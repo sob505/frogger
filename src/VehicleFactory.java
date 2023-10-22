@@ -2,7 +2,7 @@ import javafx.scene.image.Image;
 
 public class VehicleFactory implements LocationFactory {
     @Override // Green car and tractor move right
-    public RightMover makeRightMover(int row, int index) {
+    public RightMover makeRightMover(int row) {
         Image img = new Image("/image/frog.png");
         switch (row) {
             case 8:
@@ -16,7 +16,7 @@ public class VehicleFactory implements LocationFactory {
     }
 
     @Override // Truck, purple car, and yellow car move left
-    public LeftMover makeLeftMover(int row, int index) {
+    public LeftMover makeLeftMover(int row) {
         int width = 50;
         Image img = new Image("/image/frog.png");
         switch (row) {
