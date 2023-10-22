@@ -6,10 +6,11 @@ import java.util.Random;
 public class Background {
     private final Rectangle[] background;
     private final BackgroundPiece[][] backgroundPieces;
+    private final int[] pieces = new int[]{0, 4, 4, 3, 3, 5, 0, 2, 3, 3, 3, 3, 0};
     private final double[] speed;
     public Background(Pane pane) {
         this.background = new Rectangle[13];
-        this.backgroundPieces = new BackgroundPiece[this.background.length][4];
+        this.backgroundPieces = new BackgroundPiece[this.background.length][5];
         this.speed = new double[this.background.length];
 
         // Create the background stripes
@@ -35,9 +36,9 @@ public class Background {
 
     // Create the background pieces and initialize their speed
     private void setupPieces(int index, Pane pane) {
-        if(index == 0 || index == 6 || index == this.background.length - 1) { return; }
-        for(int i = 0; i < this.backgroundPieces[i].length; i++) {
-            this.backgroundPieces[index][i] = new BackgroundPieceFactory().createPiece(index);
+//        if(index == 0 || index == 6 || index == this.background.length - 1) { return; }
+        for(int i = 0; i < this.pieces[index]; i++) {
+            this.backgroundPieces[index][i] = new BackgroundPieceFactory().createPiece(index, i);
             //this.backgroundPieces[index][i] = new Rectangle();
             //this.backgroundPieces[index][i].setFill(Paint.valueOf("White"));
 
@@ -51,7 +52,7 @@ public class Background {
 //            }
 
             // Randomize the x-coordinate of the backgroundPiece
-            this.backgroundPieces[index][i].setX(Math.random() * 500 + 50);
+//            this.backgroundPieces[index][i].setX(Math.random() * 500 + 50);
 //            // If the backgroundPiece is too close to the one before it, move it over
 //            if(i > 0 && Math.abs(this.backgroundPieces[index][i-1].getX() + this.backgroundPieces[index][i-1].getWidth() - this.backgroundPieces[index][i].getX()) < 50) {
 //                this.backgroundPieces[index][i].setX(this.backgroundPieces[index][i].getX() + 100);

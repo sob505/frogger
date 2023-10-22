@@ -15,7 +15,7 @@ public abstract class BackgroundPiece {
         this.shape.setHeight(40);
         this.shape.setWidth(width);
         this.shape.setFill(Paint.valueOf("White"));
-        //this.shape.setFill(new ImagePattern(img));
+        this.shape.setFill(new ImagePattern(img));
     }
 
     public abstract void move();
@@ -27,4 +27,5 @@ public abstract class BackgroundPiece {
     public void setY(double y) { this.shape.setY(y); }
 
     public double getWidth() { return this.shape.getWidth(); }
+    public void setRotate(double rotate) { this.shape.setRotate(rotate); }
 }

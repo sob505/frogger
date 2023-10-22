@@ -2,8 +2,10 @@ import javafx.scene.image.Image;
 
 public class VehicleFactory implements LocationFactory {
     @Override // Green car and tractor move right
-    public RightMover makeRightMover(int row) {
+    public RightMover makeRightMover(int row, int index) {
         Image img = new Image("/image/frog.png");
+        int width = 50;
+        int spacing = (width + 150) * index;
         switch (row) {
             case 8:
                 img = new Image("/image/greenCar.png");
@@ -12,16 +14,18 @@ public class VehicleFactory implements LocationFactory {
                 img = new Image("/image/Tractor.png");
                 break;
         }
-        return new RightMover(row, 50, img);
+        return new RightMover(row, width, img, spacing);
     }
 
     @Override // Truck, purple car, and yellow car move left
-    public LeftMover makeLeftMover(int row) {
+    public LeftMover makeLeftMover(int row, int index) {
         int width = 50;
+        int spacing = (width + 150) * index;
         Image img = new Image("/image/frog.png");
         switch (row) {
             case 7:
                 width = 100;
+                spacing = width * index + 200;
                 img = new Image("/image/Truck.png");
                 break;
             case 9:
@@ -31,6 +35,6 @@ public class VehicleFactory implements LocationFactory {
                 img = new Image("/image/yellow-car.png");
                 break;
         }
-        return new LeftMover(row, width, img);
+        return new LeftMover(row, width, img, spacing + width);
     }
 }
