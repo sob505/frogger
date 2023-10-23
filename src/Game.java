@@ -5,9 +5,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
+import javafx.scene.media.AudioClip;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 
 public class Game {
     private Frog player;
@@ -39,6 +41,8 @@ public class Game {
                 }
             }
         };
+        AudioClip coin = new AudioClip(Objects.requireNonNull(getClass().getResource("/sound/sound-frogger-coin-in.wav")).toExternalForm());;
+        coin.play();
         this.timer.start();
     }
 
@@ -49,6 +53,8 @@ public class Game {
             for(int j = 0; j < pieces[i].length; j++) {
                 if (pieces[i][j] != null && this.player.getFrog().intersects(pieces[i][j].getShape().getBoundsInLocal())) {
                     if (pieces[i][j].getType().equals("Vehicle")) {
+                        AudioClip squash = new AudioClip(Objects.requireNonNull(getClass().getResource("/sound/sound-frogger-squash.wav")).toExternalForm());;
+                        squash.play();
                         lose("Collision");
                         return;
                     } else {
@@ -64,6 +70,8 @@ public class Game {
     private void checkSplash() {
         for(int i = 1; i < 6; i++) {
             if(this.player.getFrog().intersects(this.background.getBackground()[i].getBoundsInLocal())) {
+                AudioClip splash = new AudioClip(Objects.requireNonNull(getClass().getResource("/sound/sound-frogger-plunk.wav")).toExternalForm());;
+                splash.play();
                 lose("Splash");
                 break;
             }
