@@ -1,19 +1,15 @@
 import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Ellipse;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 import java.time.Duration;
@@ -30,7 +26,7 @@ public class Game {
     private ImageView[] lives;
     private final ImageView gameover = new ImageView("/image/gameover.png");
     private static Frog[] winners = new Frog[5];
-    private int winCnt = 0;
+    private static int winCnt = 0;
     // Set up the game
     public Game(Pane pane, Scene scene) {
         this.pane = pane;
@@ -50,8 +46,9 @@ public class Game {
             this.pane.getChildren().add(this.lives[i]);
         }
         // Keep winners on screen
-        for(int i = 0; i < winners.length; i++) {
-            if(winners[i] != null) {
+       // if(winCnt > 0) { this.pane.getChildren().add(winners[winCnt-1].getFrog()); }
+        for(int i = 0; i < winCnt; i++) {
+            if(winners[i] != null && !this.pane.getChildren().contains(winners[i].getFrog())) {
                 this.pane.getChildren().add(winners[i].getFrog());
             }
         }
@@ -92,7 +89,9 @@ public class Game {
                         moveFrogWithLog(pieces[i][j]);
                         return;
                     } else {
+                        checkLilypad();
                         win();
+                        return;
                     }
                 }
             }
@@ -113,6 +112,17 @@ public class Game {
     private void checkBounds() {
         if(this.player.getFrog().getCenterX() > 800 || this.player.getFrog().getCenterX() < 0) {
             lose();
+        }
+        if(this.player.getFrog().intersects(this.background.getBackground()[0].getBoundsInLocal())) {
+            lose();
+        }
+    }
+    private void checkLilypad() {
+        for(int i = 0; i < winCnt; i++) {
+            if(winners[i] != null && this.player.getFrog().intersects(winners[i].getFrog().getBoundsInLocal())) {
+                lose();
+                break;
+            }
         }
     }
 
@@ -149,14 +159,23 @@ public class Game {
     }
     // Display text
     private void win() {
-        Frog winner = new Frog();
-        winner.setFrog(new Ellipse(this.player.getFrog().getCenterX(),this.player.getFrog().getCenterY(),
-                this.player.getFrog().getRadiusX(),this.player.getFrog().getRadiusY()));
-        winner.getFrog().setFill(new ImagePattern(new Image("/image/frog.png")));
-        winners[winCnt++] = winner;
-        this.player = new Frog();
-        Game frogger = new Game(this.pane, this.scene);
-        frogger.play();
+        if(winCnt == 5) {
+            Text winTxt = new Text("You win!");
+            winTxt.setStyle("-fx-font-weight: bold;-fx-text-fill: white;-fx-text-inner-color: white; -fx-font-size: 30px;");
+            winTxt.setX(100);
+            winTxt.setY(400);
+            this.pane.getChildren().add(winTxt);
+            reset();
+        } else {
+            Frog winner = new Frog();
+            winner.setFrog(new Ellipse(this.player.getFrog().getCenterX(), this.player.getFrog().getCenterY(),
+                    this.player.getFrog().getRadiusX(), this.player.getFrog().getRadiusY()));
+            winner.getFrog().setFill(new ImagePattern(new Image("/image/frog.png")));
+            winners[winCnt++] = winner;
+            this.player = new Frog();
+            Game frogger = new Game(this.pane, this.scene);
+            frogger.play();
+        }
     }
 
     private void reset() {
