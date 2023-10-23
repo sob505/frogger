@@ -10,6 +10,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -22,7 +24,8 @@ public class Game {
     private final Pane pane;
     private final Scene scene;
     private static int numLives = 3;
-    private static ImageView[] lives = new ImageView[numLives];
+    private ImageView[] lives;
+    private final ImageView gameover = new ImageView("/image/gameover.png");
     // Set up the game
     public Game(Pane pane, Scene scene) {
         this.pane = pane;
@@ -31,14 +34,14 @@ public class Game {
         this.background = new Background(pane);
         this.player = new Frog();
         this.pane.getChildren().addAll(this.player.getFrog());
-
+        this.lives = new ImageView[numLives];
         for(int i = 0; i < numLives; i++) {
-            lives[i] = new ImageView("/image/frog.png");
-            lives[i].setY(700);
-            lives[i].setX(i*50);
-            lives[i].setFitHeight(40);
-            lives[i].setFitWidth(40);
-            this.pane.getChildren().add(lives[i]);
+            this.lives[i] = new ImageView("/image/frog.png");
+            this.lives[i].setY(700);
+            this.lives[i].setX(i*50);
+            this.lives[i].setFitHeight(40);
+            this.lives[i].setFitWidth(40);
+            this.pane.getChildren().add(this.lives[i]);
         }
     }
 
@@ -70,11 +73,13 @@ public class Game {
                     if (pieces[i][j].getType().equals("Vehicle")) {
                         AudioClip squash = new AudioClip(Objects.requireNonNull(getClass().getResource("/sound/sound-frogger-squash.wav")).toExternalForm());;
                         squash.play();
-                        lose("Collision");
+                        lose();
                         return;
-                    } else {
+                    } else if (pieces[i][j].getType().equals("Float")) {
                         moveFrogWithLog(pieces[i][j]);
                         return;
+                    } else {
+                        win();
                     }
                 }
             }
@@ -87,7 +92,7 @@ public class Game {
             if(this.player.getFrog().intersects(this.background.getBackground()[i].getBoundsInLocal())) {
                 AudioClip splash = new AudioClip(Objects.requireNonNull(getClass().getResource("/sound/sound-frogger-plunk.wav")).toExternalForm());;
                 splash.play();
-                lose("Splash");
+                lose();
                 break;
             }
         }
@@ -104,23 +109,17 @@ public class Game {
         });
     }
     // Run this if you lose the game
-    private void lose(String type) {
+    private void lose() {
         if(--numLives == 0) {
-            this.timer.stop();
-            this.pane.getChildren().removeAll();
-            Button btn = new Button("Play again?");
-            btn.setPrefSize(100, 50);
-            btn.setTranslateX(350);
-            btn.setTranslateY(325);
-            this.pane.getChildren().add(btn);
-
-            btn.setOnAction((ActionEvent event) -> {
-                this.pane.getChildren().remove(btn);
-                Game frogger = new Game(this.pane, this.scene);
-                frogger.play();
-            });
+            reset();
+            this.pane.getChildren().removeAll(this.lives);
+            this.gameover.setFitWidth(200);
+            this.gameover.setFitHeight(50);
+            this.gameover.setX(100);
+            this.gameover.setY(325);
+            this.pane.getChildren().add(gameover);
         } else {
-            this.pane.getChildren().removeAll();
+            this.pane.getChildren().removeAll(this.lives);
             this.player = new Frog();
             Game frogger = new Game(this.pane, this.scene);
             frogger.play();
@@ -129,5 +128,29 @@ public class Game {
     // If a frog is sitting on a turtle or log, it should move with the object
     private void moveFrogWithLog(BackgroundPiece piece) {
         this.player.getFrog().setCenterX(this.player.getFrog().getCenterX() + piece.getSpeed());
+    }
+    // Display text
+    private void win() {
+        Text txt = new Text("You win!");
+        txt.setStyle("-fx-font-weight: bold");
+       // txt.setFont("-fx-font-size: 50");
+        this.pane.getChildren().add(txt);
+        reset();
+    }
+
+    private void reset() {
+        this.timer.stop();
+        this.pane.getChildren().removeAll();
+        Button btn = new Button("Play again?");
+        btn.setPrefSize(100, 50);
+        btn.setTranslateX(350);
+        btn.setTranslateY(325);
+        this.pane.getChildren().add(btn);
+
+        btn.setOnAction((ActionEvent event) -> {
+            this.pane.getChildren().removeAll(btn, gameover);
+            Game frogger = new Game(this.pane, this.scene);
+            frogger.play();
+        });
     }
 }
