@@ -6,14 +6,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-
-import static javafx.scene.shape.Shape.intersect;
 
 public class Game {
     private Frog player;
@@ -21,6 +15,7 @@ public class Game {
     private AnimationTimer timer;
     private final Pane pane;
     private final Scene scene;
+    // Set up the game
     public Game(Pane pane, Scene scene) {
         this.pane = pane;
         this.scene = scene;
@@ -30,6 +25,7 @@ public class Game {
         this.pane.getChildren().addAll(this.player.getFrog());
     }
 
+    // Run the animation timer throughout the game
     public void play() {
         this.timer = new AnimationTimer() {
             private Duration lastUpdate = Duration.of(10, ChronoUnit.NANOS);
@@ -46,22 +42,35 @@ public class Game {
         this.timer.start();
     }
 
+    // Check if the frog collided with a vehicle
     public void checkCollisions() {
         BackgroundPiece[][] pieces = this.background.getBackgroundPieces();
         for (int i = 0; i < pieces.length; i++) {
             for(int j = 0; j < pieces[i].length; j++) {
                 if (pieces[i][j] != null && this.player.getFrog().intersects(pieces[i][j].getShape().getBoundsInLocal())) {
                     if (pieces[i][j].getType().equals("Vehicle")) {
-                        lose();
-                        break;
+                        lose("Collision");
+                        return;
                     } else {
                         moveFrogWithLog(pieces[i][j]);
-                        break;
+                        return;
                     }
                 }
             }
         }
+        checkSplash();
     }
+    // Check if the frog fell in the water
+    private void checkSplash() {
+        for(int i = 1; i < 6; i++) {
+            if(this.player.getFrog().intersects(this.background.getBackground()[i].getBoundsInLocal())) {
+                lose("Splash");
+                break;
+            }
+        }
+
+    }
+    // Move the player frog when arrow keys are pressed
     private void keyListener(Scene scene) {
         scene.setOnKeyPressed(ke -> {
             KeyCode keyCode = ke.getCode();
@@ -71,7 +80,8 @@ public class Game {
             }
         });
     }
-    private void lose() {
+    // Run this if you lose the game
+    private void lose(String type) {
         this.timer.stop();
         this.pane.getChildren().removeAll();
         Button btn = new Button("Play again?");
@@ -86,13 +96,8 @@ public class Game {
             frogger.play();
         });
     }
+    // If a frog is sitting on a turtle or log, it should move with the object
     private void moveFrogWithLog(BackgroundPiece piece) {
         this.player.getFrog().setCenterX(this.player.getFrog().getCenterX() + piece.getSpeed());
-
-//        piece.getShape().xProperty().addListener((observable, oldValue, newValue) -> {
-//            // Update the other variable to match the x-value of the rectangle
-//            double movement = oldValue.doubleValue() - newValue.doubleValue();
-//            this.player.getFrog().setCenterX(this.player.getFrog().getCenterX() + movement);
-//        });
     }
 }
