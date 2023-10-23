@@ -11,13 +11,13 @@ public abstract class BackgroundPiece {
     private final Rectangle shape;
     private final String type;
 
+    // Set up the background pieces
     public BackgroundPiece(int row, double speed, int width, Image img, String type) {
         this.row = row;
         this.speed = speed;
         this.shape = new Rectangle();
         this.shape.setHeight(40);
         this.shape.setWidth(width);
-        this.shape.setFill(Paint.valueOf("White"));
         this.shape.setFill(new ImagePattern(img));
         this.type = type;
     }
@@ -33,5 +33,5 @@ public abstract class BackgroundPiece {
     public double getWidth() { return this.shape.getWidth(); }
     public String getType() { return this.type; }
     public double getSpeed() { return this.speed; }
-    public void setSpeed() { this.speed = speed; }
+    public void setSpeed(double speed) { this.speed = speed; }
 }

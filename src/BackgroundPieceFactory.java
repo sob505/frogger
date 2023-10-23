@@ -15,7 +15,7 @@ public class BackgroundPieceFactory {
             case 7, 9, 11:
                 piece = new VehicleFactory().makeLeftMover(row, index, rowSpeed);
                 break;
-            default: // for rows 0, 6, and 12
+            default: // for rows 6 and 12
                 break;
         }
         return piece;

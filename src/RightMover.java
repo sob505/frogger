@@ -13,7 +13,7 @@ public class RightMover extends BackgroundPiece {
     @Override
     public void move() {
         if(super.getX() > 825) {
-            super.setX(0);
+            super.setX(0 - super.getWidth());
         } else {
             super.setX(super.getX() + super.getSpeed());
         }

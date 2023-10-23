@@ -1,18 +1,25 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import org.w3c.dom.css.Rect;
+
 import java.util.Random;
 
 public class Background {
     private final Rectangle[] background;
     private BackgroundPiece[][] backgroundPieces;
+    private final Rectangle[] lilypads;
+    private final Image lilypad = new Image("/image/lilypad.png");
     private final Random rand = new Random();
-    private final int[] pieces = new int[]{0, 4, 4, 3, 3, 5, 0, 2, 3, 3, 3, 3, 0};
-    //private final double[] speed;
+    private final int[] pieces = new int[]{5, 4, 4, 3, 3, 5, 0, 2, 3, 3, 3, 3, 0};
+    // Set up the background of the game
     public Background(Pane pane) {
         this.background = new Rectangle[13];
         this.backgroundPieces = new BackgroundPiece[this.background.length][5];
-       // this.speed = new double[this.background.length];
+        this.lilypads = new Rectangle[5];
 
         // Create the background stripes
         for(int i = 0; i < this.background.length; i++) {
@@ -23,13 +30,6 @@ public class Background {
             else if(i > 6 && i <= 11) { this.background[i].setFill(Paint.valueOf("Black")); }
             else { this.background[i].setFill(Paint.valueOf("Green")); }
 
-//            Random rand = new Random();
-//            if(i % 2 == 0) {
-//                this.speed[i] = rand.nextInt(4) + 2;
-//            } else {
-//                this.speed[i] = -1 * (rand.nextInt(4) + 2);
-//            }
-
             pane.getChildren().add(this.background[i]);
             setupPieces(i,pane);
         }
@@ -38,31 +38,25 @@ public class Background {
     // Create the background pieces and initialize their speed
     private void setupPieces(int index, Pane pane) {
         double rowSpeed = rand.nextInt(4) + 2;
-//        if(index == 0 || index == 6 || index == this.background.length - 1) { return; }
         for(int i = 0; i < this.pieces[index]; i++) {
-            this.backgroundPieces[index][i] = new BackgroundPieceFactory().createPiece(index, i, rowSpeed);
-            //this.backgroundPieces[index][i] = new Rectangle();
-            //this.backgroundPieces[index][i].setFill(Paint.valueOf("White"));
-
-            // Keep a standard height of 40 and standard width depending on which row it is in
-            //this.backgroundPieces[index][i].setHeight(40);
-//            if(index < 6) {
-//               // this.backgroundPieces[index][i] = new Log();
-//                //this.backgroundPieces[index][i].setWidth(Math.random() * 100 + 50);
-//            } else {
-//                this.backgroundPieces[index][i].setWidth(50);
-//            }
-
-            // Randomize the x-coordinate of the backgroundPiece
-//            this.backgroundPieces[index][i].setX(Math.random() * 500 + 50);
-//            // If the backgroundPiece is too close to the one before it, move it over
-//            if(i > 0 && Math.abs(this.backgroundPieces[index][i-1].getX() + this.backgroundPieces[index][i-1].getWidth() - this.backgroundPieces[index][i].getX()) < 50) {
-//                this.backgroundPieces[index][i].setX(this.backgroundPieces[index][i].getX() + 100);
-//            }
+            if(index == 0) {
+                this.backgroundPieces[index][i] = makeLilyPad(index, i);
+            } else {
+                this.backgroundPieces[index][i] = new BackgroundPieceFactory().createPiece(index, i, rowSpeed);
+            }
             // Set the backgroundPiece in the corresponding stripe
             this.backgroundPieces[index][i].setY(this.background[index].getY()+5);
             pane.getChildren().add(this.backgroundPieces[index][i].getShape());
         }
+    }
+    private BackgroundPiece makeLilyPad(int index, int i) {
+        BackgroundPiece lilypad = new BackgroundPiece(index, 0, 50, this.lilypad, "Lilypad") {
+            @Override
+            public void move() { return; }
+        };
+        lilypad.setX(i * 185 + 5);
+        lilypad.getShape().setRotate(180);
+        return lilypad;
     }
     // Move the background pieces
     public void move() {
@@ -73,14 +67,6 @@ public class Background {
                 else {
                     this.backgroundPieces[i][j].move();
                 }
-//                // Once the piece has reached the far side of the board, reset it at the opposite end
-//                if(this.speed[i] < 0 && this.backgroundPieces[i][j].getX() + this.backgroundPieces[i][j].getWidth() < -10) {
-//                   this.backgroundPieces[i][j].setX(750);
-//                } else if (this.speed[i] > 0 && this.backgroundPieces[i][j].getX() > 825) {
-//                    this.backgroundPieces[i][j].setX(0);
-//                } else { // Otherwise keep moving it at the row's speed
-//                    this.backgroundPieces[i][j].setX(this.backgroundPieces[i][j].getX() + this.speed[i]);
-//                }
             }
         }
     }

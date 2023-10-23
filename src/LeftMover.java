@@ -11,7 +11,7 @@ public class LeftMover extends BackgroundPiece {
     @Override
     public void move() {
         if(super.getX() + super.getWidth() < -10) {
-            super.setX(750);
+            super.setX(800);
         } else {
             super.setX(super.getX() + super.getSpeed());
         }

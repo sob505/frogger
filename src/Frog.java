@@ -16,11 +16,15 @@ public class Frog extends Node {
     private Ellipse frog;
     private final AudioClip hop = new AudioClip(Objects.requireNonNull(getClass().getResource("/sound/sound-frogger-hop.wav")).toExternalForm());;
     public Frog() {
-        this.frog = new Ellipse(15,20);
+        this.frog = new Ellipse(20,20);
         Image frogImage = new Image("/image/frog.png");
         this.frog.setFill(new ImagePattern(frogImage));
         this.frog.setCenterX(400);
         this.frog.setCenterY(650);
+    }
+
+    public void resetFrog() {
+
     }
 
     public void moveFrog(KeyCode keyCode) {

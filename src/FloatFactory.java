@@ -1,6 +1,7 @@
 import javafx.scene.image.Image;
 
 public class FloatFactory implements LocationFactory {
+
     @Override // Only logs move to the right in the river
     public RightMover makeRightMover(int row, int index, double rowSpeed) {
         int width = 0;
@@ -14,7 +15,7 @@ public class FloatFactory implements LocationFactory {
                 img = new Image("/image/log3.png");
                 break;
             case 3:
-                width = 240;
+                width = 200;
                 spacing = (width + 120) * index;
                 img = new Image("/image/log4.png");
                 break;
