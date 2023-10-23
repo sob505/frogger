@@ -1,20 +1,15 @@
 import javafx.scene.Node;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.ImagePattern;
-import javafx.scene.paint.Paint;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Ellipse;
-
 import java.util.Objects;
 
 public class Frog extends Node {
     private Ellipse frog;
     private final AudioClip hop = new AudioClip(Objects.requireNonNull(getClass().getResource("/sound/sound-frogger-hop.wav")).toExternalForm());;
+    // Set up the Frog
     public Frog() {
         this.frog = new Ellipse(20,20);
         Image frogImage = new Image("/image/frog.png");
@@ -23,10 +18,7 @@ public class Frog extends Node {
         this.frog.setCenterY(650);
     }
 
-    public void resetFrog() {
-
-    }
-
+    // Move the frog when the corresponding arrow key is pressed
     public void moveFrog(KeyCode keyCode) {
         if(keyCode.equals(KeyCode.UP)) {
             // Check that the frog is not going out of bounds
@@ -55,5 +47,8 @@ public class Frog extends Node {
         }
         this.hop.play();
     }
+
+    // Return the frog's ellipse
     public Ellipse getFrog() { return this.frog; }
+    public void setFrog(Ellipse frog) { this.frog = frog; }
 }

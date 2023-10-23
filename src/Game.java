@@ -2,6 +2,7 @@ import javafx.animation.AnimationTimer;
 import javafx.event.ActionEvent;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
@@ -10,6 +11,8 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Button;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.AudioClip;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Ellipse;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
@@ -26,6 +29,8 @@ public class Game {
     private static int numLives = 3;
     private ImageView[] lives;
     private final ImageView gameover = new ImageView("/image/gameover.png");
+    private static Frog[] winners = new Frog[5];
+    private int winCnt = 0;
     // Set up the game
     public Game(Pane pane, Scene scene) {
         this.pane = pane;
@@ -34,6 +39,7 @@ public class Game {
         this.background = new Background(pane);
         this.player = new Frog();
         this.pane.getChildren().addAll(this.player.getFrog());
+        // Display number of lives
         this.lives = new ImageView[numLives];
         for(int i = 0; i < numLives; i++) {
             this.lives[i] = new ImageView("/image/frog.png");
@@ -42,6 +48,12 @@ public class Game {
             this.lives[i].setFitHeight(40);
             this.lives[i].setFitWidth(40);
             this.pane.getChildren().add(this.lives[i]);
+        }
+        // Keep winners on screen
+        for(int i = 0; i < winners.length; i++) {
+            if(winners[i] != null) {
+                this.pane.getChildren().add(winners[i].getFrog());
+            }
         }
     }
 
@@ -56,6 +68,7 @@ public class Game {
                     lastUpdate = nowDur;
                     background.move();
                     checkCollisions();
+                    checkBounds();
                 }
             }
         };
@@ -96,8 +109,13 @@ public class Game {
                 break;
             }
         }
-
     }
+    private void checkBounds() {
+        if(this.player.getFrog().getCenterX() > 800 || this.player.getFrog().getCenterX() < 0) {
+            lose();
+        }
+    }
+
     // Move the player frog when arrow keys are pressed
     private void keyListener(Scene scene) {
         scene.setOnKeyPressed(ke -> {
@@ -110,16 +128,16 @@ public class Game {
     }
     // Run this if you lose the game
     private void lose() {
+        this.pane.getChildren().removeAll(this.lives);
         if(--numLives == 0) {
             reset();
-            this.pane.getChildren().removeAll(this.lives);
+            numLives = 3;
             this.gameover.setFitWidth(200);
             this.gameover.setFitHeight(50);
             this.gameover.setX(100);
             this.gameover.setY(325);
             this.pane.getChildren().add(gameover);
         } else {
-            this.pane.getChildren().removeAll(this.lives);
             this.player = new Frog();
             Game frogger = new Game(this.pane, this.scene);
             frogger.play();
@@ -131,16 +149,18 @@ public class Game {
     }
     // Display text
     private void win() {
-        Text txt = new Text("You win!");
-        txt.setStyle("-fx-font-weight: bold");
-       // txt.setFont("-fx-font-size: 50");
-        this.pane.getChildren().add(txt);
-        reset();
+        Frog winner = new Frog();
+        winner.setFrog(new Ellipse(this.player.getFrog().getCenterX(),this.player.getFrog().getCenterY(),
+                this.player.getFrog().getRadiusX(),this.player.getFrog().getRadiusY()));
+        winner.getFrog().setFill(new ImagePattern(new Image("/image/frog.png")));
+        winners[winCnt++] = winner;
+        this.player = new Frog();
+        Game frogger = new Game(this.pane, this.scene);
+        frogger.play();
     }
 
     private void reset() {
         this.timer.stop();
-        this.pane.getChildren().removeAll();
         Button btn = new Button("Play again?");
         btn.setPrefSize(100, 50);
         btn.setTranslateX(350);
@@ -149,6 +169,9 @@ public class Game {
 
         btn.setOnAction((ActionEvent event) -> {
             this.pane.getChildren().removeAll(btn, gameover);
+            winners = new Frog[5];
+            this.player = new Frog();
+            this.timer.start();
             Game frogger = new Game(this.pane, this.scene);
             frogger.play();
         });
