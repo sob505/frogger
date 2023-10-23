@@ -1,7 +1,5 @@
 import javafx.scene.image.Image;
 
-import java.util.Random;
-
 public class LeftMover extends BackgroundPiece {
     public LeftMover(int row, int width, Image img, int spacing, String type, double rowSpeed) {
         super(row, -1 * rowSpeed, width, img, type);

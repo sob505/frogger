@@ -37,7 +37,4 @@ public class VehicleFactory implements LocationFactory {
         }
         return new LeftMover(row, width, img, spacing, "Vehicle", rowSpeed);
     }
-    public void addListener() {
-
-    }
 }

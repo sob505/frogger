@@ -109,6 +109,7 @@ public class Game {
             }
         }
     }
+    // Check if the frog went out of bounds
     private void checkBounds() {
         if(this.player.getFrog().getCenterX() > 800 || this.player.getFrog().getCenterX() < 0) {
             lose();
@@ -117,6 +118,7 @@ public class Game {
             lose();
         }
     }
+    // Check if there is more than one frog on the lilypad (not allowed)
     private void checkLilypad() {
         for(int i = 0; i < winCnt; i++) {
             if(winners[i] != null && this.player.getFrog().intersects(winners[i].getFrog().getBoundsInLocal())) {
